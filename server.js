@@ -53,7 +53,7 @@ var server = http.createServer(function(req, res) {
     else if (parsedUrl.pathname == "/send") {
 	var sourceLang = parsedUrl.query.sourceLang;
 	var toUser = parsedUrl.query.toUser;
-	var fromUser = parsedUrl.query.fromUser;
+	var fromUser = parsedUrl.query.user;
 	var message = parsedUrl.query.message;
 	connection.query("INSERT INTO messages SET toUser = '"+toUser+"', fromUser = '"+fromUser+"', message = '"+message+"', sourceLang = '"+sourceLang+"', time_stamp = NOW(), status = 'unread'", function(err, rows, fields) {
 	    if (err) throw err;
