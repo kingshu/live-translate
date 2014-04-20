@@ -1,0 +1,32 @@
+
+<div class="text-center">
+	<ul class="pagination">
+	{{#pagination}}
+		
+		{{#first}}
+		<li><a href="{{root}}/{{view.slug}}">«</a></li>
+		{{/first}}
+
+		{{#prev}}
+		<li><a href="{{root}}/{{view.slug}}/?p={{index}}">‹</a></li>
+		{{/prev}}
+
+		{{#page}}
+		<li><a href="{{root}}/{{view.slug}}/?p={{index}}">{{index}}</a></li>
+		{{/page}}
+
+		{{#active}}
+		<li class="active"><a href="">{{index}}</a></li>
+		{{/active}}
+
+		{{#next}}
+		<li><a href="{{root}}/{{view.slug}}/?p={{index}}">›</a></li>
+		{{/next}}
+
+		{{#last}}
+		<li><a href="{{root}}/{{view.slug}}/?p={{index}}">»</a></li>
+		{{/last}}
+
+	{{/pagination}}
+	</ul>
+</div>
