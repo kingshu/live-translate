@@ -21,11 +21,13 @@ var server = http.createServer(function(req, res) {
 	var username = parsedUrl.query.user;
     	var targetLang = parsedUrl.query.userLang;
 
-	connection.query("SELECT fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = '"+username+"' AND status = 'unread'", function (err, rows, fields) {
-	    var respObj = { success: "true", message: "Messages retrieved", results: new Array() };
+	connection.query("SELECT id, fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = '"+username+"' AND status = 'unread'", function (err, rows, fields) {
+	    var respObj = { success: "true", message: "Messages retrieved", results: [] };
+	    var ids = "(";
 	    for (var i in rows) {
 		var resultRow = {};
 		resultRow.from = rows[i].fromUser;
+		ids += rows[i].id + "," ;
 		resultRow.timestamp = rows[i].time_stamp;
 		if (targetLang != rows[i].sourceLang) {
 		    var urlencMsg = encodeURIComponent(rows[i].message);
@@ -34,7 +36,7 @@ var server = http.createServer(function(req, res) {
 			if (err) throw err;
 			if (response.statusCode == 200) {
 			    var bodyJSON = JSON.parse(body) ;
-			    resultRow.message = String(bodyJSON.data.translations[0].translatedText);
+			    resultRow.message = bodyJSON.data.translations[0].translatedText;
 			    respObj.results.push(resultRow);
 			}
 	    	    });
@@ -44,6 +46,9 @@ var server = http.createServer(function(req, res) {
 		    respObj.results.push(resultRow);
 		}
 	    }
+	    ids = ids.substring(0, ids.length-1);
+	    ids += ")";
+//	    connection.query("UPDATE messages SET status='read' WHERE id IN "+ids, function(err,rows,fields) {if(err) throw err;} );
 	    setTimeout ( function() {
 	    	res.end(JSON.stringify(respObj));
 	    }, 250);
