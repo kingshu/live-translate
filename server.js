@@ -9,12 +9,11 @@ var connection = mysql.createConnection({
   password : 'spr1ng3r',
   database : 'mainDB'
 });
-connection.connect();
 
 var key = "AIzaSyDuIB59V7YxEIGzM1XUM31eOehB6PQYxI8";
 
 var server = http.createServer(function(req, res) {
-
+    
     res.writeHead(200, {'content-type': 'application/json'});
     var parsedUrl = url.parse(req.url, true);
    
@@ -23,7 +22,7 @@ var server = http.createServer(function(req, res) {
     	var targetLang = parsedUrl.query.userLang;
 
 	connection.query("SELECT fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = '"+username+"' AND status = 'unread'", function (err, rows, fields) {
-	    var respObj = { success: "true", message: "Messages retrieved", results: [] };
+	    var respObj = { success: "true", message: "Messages retrieved", results: new Array() };
 	    for (var i in rows) {
 		var resultRow = {};
 		resultRow.from = rows[i].fromUser;
@@ -31,20 +30,23 @@ var server = http.createServer(function(req, res) {
 		if (targetLang != rows[i].sourceLang) {
 		    var urlencMsg = encodeURIComponent(rows[i].message);
 	 	    var gt_url = "https://www.googleapis.com/language/translate/v2?key="+key+"&source="+rows[i].sourceLang+"&target="+targetLang+"&q="+urlencMsg;
-	    	    console.log(gt_url);
-		    request(gt_url, function(err, response, body) {
-			res.write("Translating\n");
-			console.log(body);
-                	res.write(JSON.stringify(body));
+		    request.get(gt_url, function(err, response, body) {
+			if (err) throw err;
+			if (response.statusCode == 200) {
+			    var bodyJSON = JSON.parse(body) ;
+			    resultRow.message = String(bodyJSON.data.translations[0].translatedText);
+			    respObj.results.push(resultRow);
+			}
 	    	    });
 		}
 		else {
 		    resultRow.message = rows[i].message;
+		    respObj.results.push(resultRow);
 		}
-		console.log("----------");
-		respObj.results.push(resultRow);
 	    }
-	    res.end(JSON.stringify(respObj));
+	    setTimeout ( function() {
+	    	res.end(JSON.stringify(respObj));
+	    }, 250);
 	});
     } 
 
