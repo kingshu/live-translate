@@ -12,9 +12,50 @@ var connection = mysql.createConnection({
 
 var key = "AIzaSyDuIB59V7YxEIGzM1XUM31eOehB6PQYxI8";
 
+function setResp (i, rows, targetLang, res, respObj, idList) {
+    setTimeout(function() {
+	var resultRow = {};
+	resultRow.from = rows[i].fromUser;
+	resultRow.timestamp = rows[i].time_stamp;
+	if (targetLang != rows[i].sourceLang) {
+	    var urlencMsg = encodeURIComponent(rows[i].message);
+	    var gt_url = "https://www.googleapis.com/language/translate/v2?key="+key+"&source="+rows[i].sourceLang+"&target="+targetLang+"&q="+urlencMsg;
+	    request.get(gt_url, function(err, response, body) {
+	        if (err) throw err;
+	        if (response.statusCode == 200) {
+	    	    var bodyJSON = JSON.parse(body) ;
+		    resultRow.message = bodyJSON.data.translations[0].translatedText;
+		    respObj.results.push(resultRow);
+		}
+		if (i==0) {
+		    idList += rows[i].id+")";
+//  	    	    connection.query("UPDATE messages SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
+		    res.end (JSON.stringify(respObj));
+		}
+		else
+		    setResp (i-1, rows, targetLang, res, respObj, idList+rows[i]+",");
+	    });
+	}
+	else {
+	    resultRow.message = rows[i].message;
+	    respObj.results.push(resultRow);
+	    if (i==0) {
+		idList += rows[i].id+")";		
+//  	        connection.query("UPDATE messages SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
+		res.end (JSON.stringify(respObj));
+	    }
+	    else
+		setResp (i-1, rows, targetLang, res, respObj, idList+rows[i]+",");
+	} 	    
+    }, 200);
+}
+
+
+
+
 var server = http.createServer(function(req, res) {
     
-    res.writeHead(200, {'content-type': 'application/json'});
+    res.writeHead(200, {'content-type': 'application/json;charset=utf-8'});
     var parsedUrl = url.parse(req.url, true);
    
     if (parsedUrl.pathname == "/receive") { 
@@ -23,35 +64,7 @@ var server = http.createServer(function(req, res) {
 
 	connection.query("SELECT id, fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = '"+username+"' AND status = 'unread'", function (err, rows, fields) {
 	    var respObj = { success: "true", message: "Messages retrieved", results: [] };
-	    var ids = "(";
-	    for (var i in rows) {
-		var resultRow = {};
-		resultRow.from = rows[i].fromUser;
-		ids += rows[i].id + "," ;
-		resultRow.timestamp = rows[i].time_stamp;
-		if (targetLang != rows[i].sourceLang) {
-		    var urlencMsg = encodeURIComponent(rows[i].message);
-	 	    var gt_url = "https://www.googleapis.com/language/translate/v2?key="+key+"&source="+rows[i].sourceLang+"&target="+targetLang+"&q="+urlencMsg;
-		    request.get(gt_url, function(err, response, body) {
-			if (err) throw err;
-			if (response.statusCode == 200) {
-			    var bodyJSON = JSON.parse(body) ;
-			    resultRow.message = bodyJSON.data.translations[0].translatedText;
-			    respObj.results.push(resultRow);
-			}
-	    	    });
-		}
-		else {
-		    resultRow.message = rows[i].message;
-		    respObj.results.push(resultRow);
-		}
-	    }
-	    ids = ids.substring(0, ids.length-1);
-	    ids += ")";
-//	    connection.query("UPDATE messages SET status='read' WHERE id IN "+ids, function(err,rows,fields) {if(err) throw err;} );
-	    setTimeout ( function() {
-	    	res.end(JSON.stringify(respObj));
-	    }, 250);
+	    setResp(rows.length-1, rows, targetLang, res, respObj, "(");   
 	});
     } 
 
@@ -64,7 +77,7 @@ var server = http.createServer(function(req, res) {
 	var message = parsedUrl.query.message;
 	connection.query("INSERT INTO messages SET toUser = '"+toUser+"', fromUser = '"+fromUser+"', message = '"+message+"', sourceLang = '"+sourceLang+"', time_stamp = NOW(), status = 'unread'", function(err, rows, fields) {
 	    if (err) throw err;
-	    var respObj = { success: "true", message: "Message sent successfully" };
+	    respObj = { success: "true", message: "Message sent successfully" };
 	    res.end(JSON.stringify(respObj));
 	});
 
@@ -79,12 +92,12 @@ var server = http.createServer(function(req, res) {
 	    if (rows.length == 0) {
 		connection.query("INSERT INTO users (name, pin) VALUES ('"+username+"','"+userpin+"')", function(err, rows, fields) {
  	   	    if (err) throw err;
-		    var respObj = { success: "true", message: "User registered", username: username, userpin: userpin };
+		    respObj = { success: "true", message: "User registered", username: username, userpin: userpin };
 		    res.end (JSON.stringify(respObj));
 		});
 	    }
 	    else {
-		var respObj = { success: "false", message: "Username already taken"};
+		respObj = { success: "false", message: "Username already taken"};
 		res.end(JSON.stringify(respObj));
 	    }
 	}); 
@@ -97,10 +110,10 @@ var server = http.createServer(function(req, res) {
 	var userpin = parsedUrl.query.pin;
 	connection.query("SELECT id FROM users WHERE name='"+username+"' AND pin='"+userpin+"'", function(err, rows, fields) {
 	    if (rows.length == 1) {
-		var respObj = { success: "true", message: "Logged in successfully" } ;
+		respObj = { success: "true", message: "Logged in successfully" } ;
 	    }
 	    else {
-		var respObj = { success: "false", message: "Login failed" };
+		respObj = { success: "false", message: "Login failed" };
 	    }
 	    res.end (JSON.stringify(respObj));
 	});

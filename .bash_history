@@ -160,3 +160,89 @@ git push
 exit
 node server.js 
 exit
+vim server.js
+node server.js 
+vim server.js
+node -v
+nvm install v0.10.26
+npm install nvm
+nvm install v0.10.26
+export PATH=./node_modules/.bin:$PATH
+nvm install v0.10.26
+npm install -g n
+sudo npm install -g n
+ls
+make install
+n
+node
+node -v
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+git add . -A
+git commit -m 'setTimeout fixed it'
+git push
+vim server.js 
+git add . -A
+git commit -m 'read-unread commented out for test'
+git push
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+exit
+vim server.js 
+exit
