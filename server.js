@@ -119,6 +119,37 @@ var server = http.createServer(function(req, res) {
     } // End of /login
 
 // -------------------------------------------------------------- //
+    
+    else if (parsedUrl.pathname == "/search") {
+	var phones = parsedUrl.query.phone;
+	if ( typeof phones === 'string') {
+	    phones = [];
+	    phones.push (parsedUrl.query.phone);
+	}
+	var respObj = { success: "false", message: "No users have these numbers", results: [] };
+	var phoneSet = "(";
+	for (var i in phones)
+	    phoneSet += connection.escape(phones[i])+",";
+	phoneSet = phoneSet.substring(0, phoneSet.length-1)+")";
+	connection.query("SELECT id, name, gender, phone_number, status FROM users WHERE phone_number IN "+phoneSet, function (err, rows, fields) {
+	    if (err) throw err;
+	    if (rows.length > 0) {
+	    	respObj = { success: "true", message: rows.length+" users found", results: [] } ;
+	    	for (var i in rows) {
+		    var resultRow = {};
+		    resultRow.id = rows[i].id;
+		    resultRow.name = rows[i].name;
+		    resultRow.gender = rows[i].gender;
+		    resultRow.phone_number = rows[i].phone_number;
+		    resultRow.status = rows[i].status;
+		    respObj.results.push(resultRow);
+		}
+	    }
+	    res.end(JSON.stringify(respObj));
+	}); 
+    } // End of /search
+
+// -------------------------------------------------------------- //
 
     else {
 	res.end("Fuck favico");
