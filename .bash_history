@@ -270,3 +270,43 @@ node server.js
 vim server.js 
 node server.js 
 exit
+vim server.js 
+node server.js 
+vim server.js 
+mysql --user=root --password=spr1ng3r mainDB
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+git add . -A
+git commit -m 'mysql escape and fixed recursive getter'
+git push
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+mysql --user=root --password=spr1ng3r mainDB
+node server.js 
+vim server.js 
+node server.js 
+mysql --user=root --password=spr1ng3r mainDB
+git add . -A
+git commit -m 'search working'
+git push
+exit

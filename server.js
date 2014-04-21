@@ -134,7 +134,7 @@ var server = http.createServer(function(req, res) {
 	connection.query("SELECT id, name, gender, phone_number, status FROM users WHERE phone_number IN "+phoneSet, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length > 0) {
-	    	respObj = { success: "true", message: rows.length+" users found", results: [] } ;
+	    	respObj = { success: "true", message:"Users found", numberOfMatches: rows.length, results: [] } ;
 	    	for (var i in rows) {
 		    var resultRow = {};
 		    resultRow.id = rows[i].id;
@@ -149,7 +149,42 @@ var server = http.createServer(function(req, res) {
 	}); 
     } // End of /search
 
+// --------------------------------------------------------------- //
+
+    else if (parsedUrl.pathname == '/profile') {
+	var username = connection.escape(parsedUrl.query.username) ;
+	var respObj = { success: "false", message: "No users found by that username" };
+	connection.query("SELECT id, name, real_name, gender, phone_number, status FROM users WHERE name = "+username, function (err, rows, fields) {
+	    if (rows.length == 1) {
+		respObj = { 
+				success: "true", 
+				message: "User found", 
+				user_id: rows[0].id, 
+				user_name: rows[0].user_name,
+				user_realName: rows[0].real_name,
+				user_gender: rows[0].gender,
+				user_phoneNumber: rows[0].phone_number,
+				user_status: rows[0].status
+			  } ;
+	    }
+	    res.end(JSON.stringify(respObj));
+	});
+    } // End of /profile
+
 // -------------------------------------------------------------- //
+
+    else if (parsedUrl.pathname == '/setStatus') {
+	var username = connection.escape(parsedUrl.query.user);
+	var status = connection.escape(parsedUrl.query.statusmsg);
+	var respObj = { success: "false", message: "Could not set status" };
+	connection.query("UPDATE users SET status = "+status+" WHERE name = "+username, function(err, rows, fields) {
+	    if (err) throw err;
+	    respObj = { success: "true", message: "Status updated", user_name: parsedUrl.query.user, status: parsedUrl.query.statusmsg };
+	    res.end(JSON.stringify(respObj));
+	});
+    }
+
+// ------------------------------------------------------------- //
 
     else {
 	res.end("Fuck favico");
