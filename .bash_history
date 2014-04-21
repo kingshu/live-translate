@@ -246,3 +246,27 @@ vim server.js
 exit
 vim server.js 
 exit
+vim server.js
+node server.js 
+vim server.js
+node server.js 
+vim server.js
+node server.js 
+vim server.js
+node server.js 
+vim server.js
+git add . -A
+git commit -m 'blocking emulation using recursive setTimeouts'
+git push
+exit
+vim server.js 
+history | grep mysql
+mysql --user=root --password=spr1ng3r mainDB
+vim server.js 
+node server.js 
+mysql --user=root --password=spr1ng3r mainDB
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+exit
