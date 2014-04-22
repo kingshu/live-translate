@@ -310,3 +310,35 @@ git add . -A
 git commit -m 'search working'
 git push
 exit
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+mysql --user=root --password=spr1ng3r mainDB
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+cat server.js 
+node server.js 
+git add . -A
+git commit -m 'added a bunch of features, too lazy to list all'
+git push
+exit
+node server.js 
+nohup
+nohup server.js &
+nohup node server.js &
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+mysql --user=root --password=spr1ng3r mainDB
+node server.js 
+nohup node server.js &

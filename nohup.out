@@ -1,0 +1,25 @@
+/home/ubuntu/server.js:95
+ 	   	    if (err) throw err;
+ 	   	                   ^
+Error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'm using LiveTranslate')' at line 1
+    at Query.Sequence._packetToError (/home/ubuntu/node_modules/mysql/lib/protocol/sequences/Sequence.js:30:14)
+    at Query.ErrorPacket (/home/ubuntu/node_modules/mysql/lib/protocol/sequences/Query.js:82:18)
+    at Protocol._parsePacket (/home/ubuntu/node_modules/mysql/lib/protocol/Protocol.js:202:24)
+    at Parser.write (/home/ubuntu/node_modules/mysql/lib/protocol/Parser.js:62:12)
+    at Protocol.write (/home/ubuntu/node_modules/mysql/lib/protocol/Protocol.js:37:16)
+    at Socket.<anonymous> (/home/ubuntu/node_modules/mysql/lib/Connection.js:72:28)
+    at Socket.EventEmitter.emit (events.js:107:17)
+    at readableAddChunk (_stream_readable.js:156:16)
+    at Socket.Readable.push (_stream_readable.js:123:10)
+    at TCP.onread (net.js:514:20)
+    --------------------
+    at Protocol._enqueue (/home/ubuntu/node_modules/mysql/lib/protocol/Protocol.js:110:48)
+    at Connection.query (/home/ubuntu/node_modules/mysql/lib/Connection.js:165:25)
+    at Query._callback (/home/ubuntu/server.js:94:14)
+    at Query.Sequence.end (/home/ubuntu/node_modules/mysql/lib/protocol/sequences/Sequence.js:78:24)
+    at Query._handleFinalResultPacket (/home/ubuntu/node_modules/mysql/lib/protocol/sequences/Query.js:143:8)
+    at Query.EofPacket (/home/ubuntu/node_modules/mysql/lib/protocol/sequences/Query.js:127:8)
+    at Protocol._parsePacket (/home/ubuntu/node_modules/mysql/lib/protocol/Protocol.js:202:24)
+    at Parser.write (/home/ubuntu/node_modules/mysql/lib/protocol/Parser.js:62:12)
+    at Protocol.write (/home/ubuntu/node_modules/mysql/lib/protocol/Protocol.js:37:16)
+    at Socket.<anonymous> (/home/ubuntu/node_modules/mysql/lib/Connection.js:72:28)

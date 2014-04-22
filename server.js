@@ -58,11 +58,23 @@ var server = http.createServer(function(req, res) {
    
     if (parsedUrl.pathname == "/receive") { 
 	var username = connection.escape(parsedUrl.query.user);
-    	var targetLang = connection.escape(parsedUrl.query.userLang);
-
-	connection.query("SELECT id, fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = "+username+" AND status = 'unread'", function (err, rows, fields) {
-	    var respObj = { success: "true", message: "Messages retrieved", results: [] };
-	    setResp(rows.length-1, rows, targetLang, res, respObj, "(");   
+    	var targetLang = parsedUrl.query.userLang;
+	var userpin = connection.escape(parsedUrl.query.pin);
+	
+	connection.query("SELECT id FROM users WHERE name="+username+" AND pin="+userpin, function (err, rows, fields) {
+	    if (err) throw err;
+	    if (rows.length == 1) {
+		connection.query("SELECT id, fromUser, message, sourceLang, time_stamp FROM messages WHERE toUser = "+username+" AND status = 'unread'", function (err, rows, fields) {
+	    	    if (err) throw err;
+		    console.log(rows);
+		    var respObj = { success: "true", message: "Messages retrieved", results: [] };
+	    	    setResp(rows.length-1, rows, targetLang, res, respObj, "(");
+		});
+	    }
+	    else {
+		respObj = { success: "false", message: "Incorrect username or pin" } ;
+		res.end(JSON.stringify(respObj));
+	    }   
 	});
     } // End of /receive
 
@@ -71,12 +83,24 @@ var server = http.createServer(function(req, res) {
     else if (parsedUrl.pathname == "/send") {
 	var sourceLang = connection.escape(parsedUrl.query.sourceLang);
 	var toUser     = connection.escape(parsedUrl.query.toUser);
+	var userpin    = connection.escape(parsedUrl.query.pin);
 	var fromUser   = connection.escape(parsedUrl.query.user);
 	var message    = connection.escape(parsedUrl.query.message);
-	connection.query("INSERT INTO messages SET toUser = "+toUser+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = NOW(), status = 'unread'", function(err, rows, fields) {
+
+	connection.query("SELECT id FROM users WHERE name="+fromUser+" AND pin="+userpin, function (err, rows, fields) {
 	    if (err) throw err;
-	    var respObj = { success: "true", message: "Message sent successfully" };
-	    res.end(JSON.stringify(respObj));
+	    if (rows.length == 1) {
+		$q = "INSERT INTO messages SET toUser = "+toUser+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = NOW(), status = 'unread'";
+		connection.query( $q, function(err, rows, fields) {
+	    	    if (err) throw err;
+	    	    var respObj = { success: "true", message: "Message sent successfully" };
+	    	    res.end(JSON.stringify(respObj));
+		});
+	    }
+	    else {
+		var respObj = { success: "false", message: "Incorrect username or pin" };
+		res.end ( JSON.stringify(respObj) ) ;
+	    }
 	});
 
     } // End of /send
@@ -90,8 +114,9 @@ var server = http.createServer(function(req, res) {
 	var phonenum = connection.escape(parsedUrl.query.phone);
 	var gender   = connection.escape(parsedUrl.query.gender);
 	connection.query("SELECT id FROM users WHERE name = "+username, function (err, rows, fields) {
+	    if (err) throw err;
 	    if (rows.length == 0) {
-		connection.query("INSERT INTO users (name, pin, real_name, phone_number, gender, status) VALUES ("+username+","+userpin+","+realname+","+phonenum+","+gender+",'Hi, I\'m using LiveTranslate')", function(err, rows, fields) {
+		connection.query("INSERT INTO users (name, pin, real_name, phone_number, gender, status) VALUES ("+username+","+userpin+","+realname+","+phonenum+","+gender+",'Hi, I am using LiveTranslate')", function(err, rows, fields) {
  	   	    if (err) throw err;
 		    var respObj = { success: "true", message: "User registered", user_name: username, real_name: realname, phone_number: phonenum, gender: gender };
 		    res.end (JSON.stringify(respObj));
@@ -110,6 +135,7 @@ var server = http.createServer(function(req, res) {
 	var username = connection.escape(parsedUrl.query.name);
 	var userpin  = connection.escape(parsedUrl.query.pin);
 	connection.query("SELECT id, status, gender, name FROM users WHERE name="+username+" AND pin="+userpin, function(err, rows, fields) {
+	    if (err) throw err;
 	    if (rows.length == 1)
 		var respObj = { success: "true", message: "Logged in successfully", name: rows[0].name, gender: rows[0].gender, status: rows[0].status } ;
 	    else
@@ -155,6 +181,7 @@ var server = http.createServer(function(req, res) {
 	var username = connection.escape(parsedUrl.query.username) ;
 	var respObj = { success: "false", message: "No users found by that username" };
 	connection.query("SELECT id, name, real_name, gender, phone_number, status FROM users WHERE name = "+username, function (err, rows, fields) {
+	    if (err) throw err;
 	    if (rows.length == 1) {
 		respObj = { 
 				success: "true", 
