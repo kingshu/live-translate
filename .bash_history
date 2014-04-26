@@ -342,3 +342,139 @@ node server.js
 mysql --user=root --password=spr1ng3r mainDB
 node server.js 
 nohup node server.js &
+node server.js &
+exit
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+pid
+ps
+netstat -t;n
+netstat -tln
+fuser -k 8080/tcp
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+mysql --user=root --password=spr1ng3r mainDB
+vim server.js 
+mysql --user=root --password=spr1ng3r mainDB
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+git add . -A
+git commit -m 'security enhanced and bugs fixed'
+git push
+man screen
+screen
+screen -r
+exit
+vim server.js 
+node server.js 
+vim server.js 
+screen
+exit
+node server.js &
+node server.js &
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+screen -r
+node server.js 
+screen
+screen -r
+screen -ls | grep pts | cut -d. -f1 | awk '{print $1}' | xargs kill
+vim server.js
+node server.js 
+vim server.js
+node server.js 
+vim server.js
+node server.js 
+screen
+exit
+top
+pwd
+exit
+ls
+screen -r
+exit
+ls
+screen -r
+ls
+screen -r
+wc -l server.js 
+screen -r
+exit
+screen -r
+ls
+cat nohup.out 
+exit
+screen -r
+pid
+ps
+screen -r
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+screen -r
+exit
+mysql --user=root --password=spr1ng3r mainDB
+ls /etc
+ls /etc | grep cnf
+ls /etc/mysql/
+cd /etc/mysql/
+sudo vim my.cnf 
+cd
+mysql --user=root --password=spr1ng3r mainDB
+screen -r
+mysql --user=root --password=spr1ng3r mainDB
+vim server.js 
+screen -r
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+screen -r
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+node server.js 
+vim server.js 
+screen -r
+mysql --user=root --password=spr1ng3r mainDB
+screen -r
+mysql --user=root --password=spr1ng3r mainDB
+screen -r
+exit
