@@ -503,3 +503,66 @@ mysql --user=root --password=spr1ng3r mainDB
 exit
 screen -r
 exit
+screen -r
+ps
+screen
+vim server.js 
+git add .
+git commit -m 'May 4'
+git push
+vim server.js 
+screen -r
+exit
+screen -r
+exit
+screen -r
+ls
+node server.js &
+mysql --user=root --password=spr1ng3r mainDB
+ps
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+mysql --user=root --password=spr1ng3r mainDB
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js
+vim server.js 
+node server.js &
+vim server.js 
+node server.js
+ps
+kill 16903
+node server.js
+vim server.js 
+node server.js &
+ps
+kill 17099
+exit

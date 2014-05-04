@@ -28,23 +28,23 @@ var key = "AIzaSyDuIB59V7YxEIGzM1XUM31eOehB6PQYxI8";
 		}
 		if (i==0) {
 		    idList += rows[i].id+")";
-//  	    	    connection.query("UPDATE messages2 SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
+  	    	    connection.query("UPDATE messages2 SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
 		    res.end (JSON.stringify(respObj));
 		}
 		else
-		    setResp (i-1, rows, targetLang, res, respObj, idList+rows[i]+",");
+		    setResp (i-1, rows, targetLang, res, respObj, idList+rows[i].id+",");
 	    });
 	}
 	else {
 	    resultRow.message = rows[i].message;
 	    respObj.results.push(resultRow);
 	    if (i==0) {
-		idList += rows[i].id+")";		
-//  	        connection.query("UPDATE messages2 SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
+		idList += rows[i].id+")";
+  	        connection.query("UPDATE messages2 SET status='read' WHERE id IN "+idList, function(err,rows,fields) {if(err) throw err;} );
 		res.end (JSON.stringify(respObj));
 	    }
 	    else
-		setResp (i-1, rows, targetLang, res, respObj, idList+rows[i]+",");
+		setResp (i-1, rows, targetLang, res, respObj, idList+rows[i].id+",");
 	} 	    
     }
 
@@ -60,13 +60,23 @@ var server = http.createServer(function(req, res) {
     	var targetLang = parsedUrl.query.userLang;
 	var userpin = connection.escape(parsedUrl.query.pin);
 	
+	var retrieveQuery;
+	
+	if ( parsedUrl.query.fromUser === undefined )
+	    retrieveQuery = "SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND status = 'unread'";
+   	else
+	    retrieveQuery = "SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND fromUser = "+connection.escape(parsedUrl.query.fromUser)+" AND status = 'unread'";
+	
 	connection.query("SELECT id FROM users2 WHERE name="+username+" AND pin="+userpin, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length == 1) {
-		connection.query("SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND status = 'unread'", function (err, rows, fields) {
+		connection.query( retrieveQuery, function (err, rows, fields) {
 	    	    if (err) throw err;
 		    var respObj = { success: "true", message: "Messages retrieved", results: [] };
-	    	    setResp(rows.length-1, rows, targetLang, res, respObj, "(");
+		    if ( rows.length > 0 )
+	    	    	setResp(rows.length-1, rows, targetLang, res, respObj, "(");
+		    else
+			res.end(JSON.stringify(respObj));
 		});
 	    }
 	    else {
@@ -88,7 +98,7 @@ var server = http.createServer(function(req, res) {
 	connection.query("SELECT id FROM users2 WHERE name="+fromUser+" AND pin="+userpin, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length == 1) {
-		$q = "INSERT INTO messages2 SET toUser = "+toUser+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = NOW(), status = 'unread'";
+		$q = "INSERT INTO messages2 SET toUser = "+toUser+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = UTC_TIMESTAMP(), status = 'unread'";
 		connection.query( $q, function(err, rows, fields) {
 	    	    if (err) throw err;
 	    	    var respObj = { success: "true", message: "Message sent successfully" };
