@@ -478,3 +478,28 @@ screen -r
 mysql --user=root --password=spr1ng3r mainDB
 screen -r
 exit
+git add . -A
+git commit -m 'upgrades, endpoints, security'
+git push
+exit
+screen -r
+exit
+screen -r
+ls
+clear
+ls
+screen -r
+ps
+exit
+screen -r
+exit
+screen -r
+exit
+ls
+screen -r
+exit
+screen -r
+mysql --user=root --password=spr1ng3r mainDB
+exit
+screen -r
+exit
