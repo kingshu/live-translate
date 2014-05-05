@@ -11,7 +11,7 @@ Language codes: https://developers.google.com/translate/v2/using_rest#language-p
 
 
 /register
-	parameters: name, pin, realname, phone, gender
+	parameters: name, pin, realname, phone, gender<br>
 	# phone should be in format- 999-999-9999 
 	# gender has to be uppercase M, F, or O
 	possible responses:
