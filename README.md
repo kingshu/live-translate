@@ -8,10 +8,10 @@ Example request: http://urlredactedforsecurity.amazonaws.com/register?name=jdoe&
 Language codes: https://developers.google.com/translate/v2/using_rest#language-params
 
 ========================================================
-
+<pre>
 
 /register
-	parameters: name, pin, realname, phone, gender<br>
+	parameters: name, pin, realname, phone, gender
 	# phone should be in format- 999-999-9999 
 	# gender has to be uppercase M, F, or O
 	possible responses:
@@ -204,3 +204,4 @@ Language codes: https://developers.google.com/translate/v2/using_rest#language-p
 			"message":"Could not change password"
 		}
 
+</pre>
