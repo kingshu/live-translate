@@ -55,18 +55,29 @@ var server = http.createServer(function(req, res) {
     
     res.writeHead(200, {'content-type': 'application/json;charset=utf-8'});
     var parsedUrl = url.parse(req.url, true);   
+
+
     if (parsedUrl.pathname == "/receive") { 
 	var username = connection.escape(parsedUrl.query.user);
     	var targetLang = parsedUrl.query.userLang;
 	var userpin = connection.escape(parsedUrl.query.pin);
 	
 	var retrieveQuery;
-	
-	if ( parsedUrl.query.fromUser === undefined )
+		
+	if ( parsedUrl.query.fromUser === undefined ) {
 	    retrieveQuery = "SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND status = 'unread'";
-   	else
-	    retrieveQuery = "SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND fromUser = "+connection.escape(parsedUrl.query.fromUser)+" AND status = 'unread'";
-	
+	}
+    	else {
+	    var fromUsers = parsedUrl.query.fromUser;
+	    if ( typeof fromUsers === 'string') 
+	    	fromUsers = [ parsedUrl.query.fromUser ];
+   	    var fromSet = "(";
+	    for (var i in fromUsers)
+	    	fromSet += connection.escape(fromUsers[i])+",";
+	    fromSet = fromSet.substring(0, fromSet.length-1)+")";
+	    retrieveQuery = "SELECT id, fromUser, message, sourceLang, time_stamp FROM messages2 WHERE toUser = "+username+" AND fromUser IN "+fromSet+" AND status = 'unread'";
+	}
+
 	connection.query("SELECT id FROM users2 WHERE name="+username+" AND pin="+userpin, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length == 1) {
@@ -103,7 +114,7 @@ var server = http.createServer(function(req, res) {
 	    if (rows.length == 1) {
 	  	for ( var i in toUsers ) {
 		    $q = "INSERT INTO messages2 SET toUser = "+connection.escape(toUsers[i])+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = UTC_TIMESTAMP(), status = 'unread'";
-		    console.log($q);
+		    
 		    connection.query( $q, function(err, rows, fields) {
 	    	        if (err) throw err;
 			if ( i == toUsers.length-1 ) {
@@ -174,17 +185,14 @@ var server = http.createServer(function(req, res) {
     
     else if (parsedUrl.pathname == "/search") {
 	var phones = parsedUrl.query.phone;
-	if ( typeof phones === 'string') {
-	    phones = [];
-	    phones.push (parsedUrl.query.phone);
-	}
+	if ( typeof phones === 'string') 
+	    phones = [ parsedUrl.query.phone ];
+	    
 	var respObj = { success: "false", message: "No users have these numbers", numberOfMatches: "0", results: [] };
 	var phoneSet = "(";
 	for (var i in phones)
 	    phoneSet += connection.escape(phones[i])+",";
 	phoneSet = phoneSet.substring(0, phoneSet.length-1)+")";
-
-	console.log(phoneSet);
 
 	connection.query("SELECT id, name, real_name, gender, phone_number, status FROM users2 WHERE phone_number IN "+phoneSet, function (err, rows, fields) {
 	    if (err) throw err;
