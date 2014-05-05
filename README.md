@@ -37,7 +37,8 @@ Language codes: https://developers.google.com/translate/v2/using_rest#language-p
 
 /login
 	parameters: name, pin
-	possible responses: 
+	possible responses:
+	
 		{
 			"success":"true",
 			"message":"Logged in successfully"
@@ -59,6 +60,7 @@ Language codes: https://developers.google.com/translate/v2/using_rest#language-p
 	# toUser can be single or multiple. eg- ?toUser=log or ?toUser=log&toUser=kmedhi&toUser=kartik
 	# 'user' will be the user's username stored in your settings after login.
 	response: 
+	
 		{
 			"success":"true",
 			"message":"Message sent successfully"
