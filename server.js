@@ -90,25 +90,34 @@ var server = http.createServer(function(req, res) {
 
     else if (parsedUrl.pathname == "/send") {
 	var sourceLang = connection.escape(parsedUrl.query.sourceLang);
-	var toUser     = connection.escape(parsedUrl.query.toUser);
+	var toUsers    = parsedUrl.query.toUser;
 	var userpin    = connection.escape(parsedUrl.query.pin);
 	var fromUser   = connection.escape(parsedUrl.query.user);
 	var message    = connection.escape(parsedUrl.query.message);
 
+	if ( typeof toUsers === "string" )
+	    toUsers = [ toUsers ];
+	
 	connection.query("SELECT id FROM users2 WHERE name="+fromUser+" AND pin="+userpin, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length == 1) {
-		$q = "INSERT INTO messages2 SET toUser = "+toUser+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = UTC_TIMESTAMP(), status = 'unread'";
-		connection.query( $q, function(err, rows, fields) {
-	    	    if (err) throw err;
-	    	    var respObj = { success: "true", message: "Message sent successfully" };
-	    	    res.end(JSON.stringify(respObj));
-		});
+	  	for ( var i in toUsers ) {
+		    $q = "INSERT INTO messages2 SET toUser = "+connection.escape(toUsers[i])+", fromUser = "+fromUser+", message = "+message+", sourceLang = "+sourceLang+", time_stamp = UTC_TIMESTAMP(), status = 'unread'";
+		    console.log($q);
+		    connection.query( $q, function(err, rows, fields) {
+	    	        if (err) throw err;
+			if ( i == toUsers.length-1 ) {
+	    	            var respObj = { success: "true", message: "Message sent successfully" };
+	    	    	    res.end(JSON.stringify(respObj));
+			}
+		    });
+		}
 	    }
 	    else {
-		var respObj = { success: "false", message: "Incorrect username or pin" };
+	        var respObj = { success: "false", message: "Incorrect username or pin" };
 		res.end ( JSON.stringify(respObj) ) ;
 	    }
+	
 	});
 
     } // End of /send
@@ -174,6 +183,9 @@ var server = http.createServer(function(req, res) {
 	for (var i in phones)
 	    phoneSet += connection.escape(phones[i])+",";
 	phoneSet = phoneSet.substring(0, phoneSet.length-1)+")";
+
+	console.log(phoneSet);
+
 	connection.query("SELECT id, name, real_name, gender, phone_number, status FROM users2 WHERE phone_number IN "+phoneSet, function (err, rows, fields) {
 	    if (err) throw err;
 	    if (rows.length > 0) {

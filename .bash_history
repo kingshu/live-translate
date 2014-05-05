@@ -566,3 +566,15 @@ node server.js &
 ps
 kill 17099
 exit
+ps
+screen -r
+man screen
+screen -r 16677
+screen -r
+git add .
+git commit -m 'possibly final version'
+git push
+screen -r
+exit
+screen -r
+exit
