@@ -284,7 +284,7 @@ var server = http.createServer(function(req, res) {
 // ------------------------------------------------------------- //
 
     else {
-	res.end("Fuck favico");
+	res.end("Unrecognized request, probably favico");
     }
      
 }).listen(8080);

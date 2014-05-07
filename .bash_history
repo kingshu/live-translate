@@ -578,3 +578,32 @@ screen -r
 exit
 screen -r
 exit
+git add .
+git commit -m 'added multiple recipient support'
+git push
+git pull
+git push -f
+git pull
+git pull origin master
+vim server.js
+screen -r
+exit
+screen -r
+screen 16249
+screen -r
+screen 16249.pts-1.domU-12-31-39-04-66-DE
+screen -r 16249.pts-1.domU-12-31-39-04-66-DE
+ps
+exit
+screen -r
+cat server.js
+mysql --user=root --password=spr1ng3r mainDB
+exit
+screen -r
+logout
+cat server.js
+mysql --user=root --password=spr1ng3r mainDB
+exit
+screen -r
+mysql --user=root --password=spr1ng3r mainDB
+exit
